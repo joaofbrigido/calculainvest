@@ -1,4 +1,4 @@
-import { NavCalculators } from "@/components/nav-calculators";
+import { NavCalculators } from "@/components/shared/nav-calculators";
 
 export default function PrecoAportePage() {
   return (

@@ -1,5 +1,5 @@
-import BgCard from "@/components/bg-card";
-import BorderCard from "@/components/border-card";
+import BgCard from "@/components/shared/bg-card";
+import BorderCard from "@/components/shared/border-card";
 import { Separator } from "@/components/ui/separator";
 import { DollarSign } from "lucide-react";
 

@@ -1,5 +1,5 @@
 import { Loader } from "lucide-react";
-import { Button, ButtonProps } from "./ui/button";
+import { Button, ButtonProps } from "../ui/button";
 
 type MainButtonProps = ButtonProps & {
   children: React.ReactNode;

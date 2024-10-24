@@ -1,5 +1,5 @@
-import { InputLabel } from "@/components/input-label";
-import MainButton from "@/components/main-button";
+import { InputLabel } from "@/components/shared/input-label";
+import MainButton from "@/components/shared/main-button";
 import {
   Select,
   SelectContent,

@@ -1,7 +1,7 @@
-import { NavCalculators } from "@/components/nav-calculators";
-import BgCard from "@/components/bg-card";
-import { CompoundInterestForm } from "./compound-interest-form";
-import CompoundInterestResult from "./compound-interest-result";
+import { NavCalculators } from "@/components/shared/nav-calculators";
+import { CompoundInterestForm } from "../../../components/juros-compostos/compound-interest-form";
+import CompoundInterestResult from "../../../components/juros-compostos/compound-interest-result";
+import BgCard from "@/components/shared/bg-card";
 
 export default function JurosCompostosPage() {
   return (
