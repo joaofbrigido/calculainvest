@@ -1,4 +1,5 @@
 import { InputLabel } from "@/components/input-label";
+import MainButton from "@/components/main-button";
 import {
   Select,
   SelectContent,
@@ -79,6 +80,11 @@ export const CompoundInterestForm = () => {
             <SelectItem value="monthly">Mensal</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="space-x-2 col-span-full place-self-end">
+        <MainButton variant={"secondary"}>Limpar</MainButton>
+        <MainButton>Calcular</MainButton>
       </div>
     </form>
   );
