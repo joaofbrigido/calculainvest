@@ -6,7 +6,7 @@ const BorderCard = ({
   className?: string;
 }) => {
   return (
-    <div className={`border border-border p-5 rounded-xl ${className}`}>
+    <div className={`border border-foreground/15 p-5 rounded-xl ${className}`}>
       {children}
     </div>
   );
