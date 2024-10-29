@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/chart";
 
 const CompoundInterestResult = () => {
+  // consultar os cookies e setar os dados
+
   const pieChartData = [
     { valueInvested: "totalInvested", amout: 275, fill: "#F1B61D" },
     { valueInvested: "totalInterest", amout: 200, fill: "#f59e0b" },

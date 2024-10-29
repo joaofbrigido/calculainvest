@@ -21,7 +21,9 @@ export const InputLabel = ({
       </Label>
 
       <Input
-        className={`${error ? "border-red-400" : props.className}`}
+        className={`${
+          error ? "border-red-400 dark:border-red-400" : props.className
+        }`}
         {...props}
       />
 

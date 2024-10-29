@@ -1,3 +1,6 @@
+"use client";
+
+import { calculateCompoundInterestAction } from "@/actions/juros-compostos";
 import { InputLabel } from "@/components/shared/input-label";
 import MainButton from "@/components/shared/main-button";
 import {
@@ -7,15 +10,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useForm } from "@/hooks/use-form";
 
 export const CompoundInterestForm = () => {
+  const [{ errors, success }, handleSubmit, isPending] = useForm(
+    calculateCompoundInterestAction
+  );
+
+  // se succes, rolar a tela ao resultado
+  console.log(success);
+
   return (
-    <form className="grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1">
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1"
+    >
       <InputLabel
         label="Valor Inicial"
-        id="initial-amount"
-        name="initial-amount"
+        type="number"
+        id="initialAmount"
+        name="initialAmount"
         placeholder="R$ 0,00"
+        error={errors?.initialAmount && errors?.initialAmount[0]}
       />
 
       <div className="flex gap-1 items-end">
@@ -24,8 +40,11 @@ export const CompoundInterestForm = () => {
           id="interestRate"
           name="interestRate"
           placeholder="% 0,00"
+          type="number"
+          min={0}
+          error={errors?.interestRate && errors?.interestRate[0]}
         />
-        <Select defaultValue="annual" name="SelectInterestRate">
+        <Select defaultValue="annual" name="selectInterestRate">
           <SelectTrigger className="w-[100px]">
             <SelectValue placeholder="Selecione um Período" />
           </SelectTrigger>
@@ -44,6 +63,7 @@ export const CompoundInterestForm = () => {
           name="period"
           placeholder="0"
           min={0}
+          error={errors?.period && errors?.period[0]}
         />
         <Select defaultValue="years" name="selectPeriod">
           <SelectTrigger className="w-[100px]">
@@ -58,10 +78,12 @@ export const CompoundInterestForm = () => {
 
       <InputLabel
         label="Investimento Mensal"
+        type="number"
         id="monthlyInvestment"
         name="monthlyInvestment"
         placeholder="R$ 0,00"
         containerClassName="col-span-2 max-lg:col-span-1"
+        error={errors?.monthlyInvestment && errors?.monthlyInvestment[0]}
       />
 
       <div className="flex gap-1 items-end">
@@ -70,6 +92,8 @@ export const CompoundInterestForm = () => {
           id="investmentInflation"
           name="investmentInflation"
           placeholder="% 0,00"
+          type="number"
+          error={errors?.investmentInflation && errors?.investmentInflation[0]}
         />
         <Select defaultValue="annual" name="SelectInvestmentInflation">
           <SelectTrigger className="w-[100px]">
@@ -83,8 +107,10 @@ export const CompoundInterestForm = () => {
       </div>
 
       <div className="space-x-2 col-span-full place-self-end">
-        <MainButton variant={"secondary"}>Limpar</MainButton>
-        <MainButton>Calcular</MainButton>
+        <MainButton variant={"secondary"} type="reset" isLoading={isPending}>
+          Limpar
+        </MainButton>
+        <MainButton isLoading={isPending}>Calcular</MainButton>
       </div>
     </form>
   );
