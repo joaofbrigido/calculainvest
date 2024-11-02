@@ -21,15 +21,51 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { numberToCurrency } from "@/utils/number-converter";
 
-const CompoundInterestResult = () => {
-  // consultar os cookies e setar os dados
+export type CompoundInterestResultProps = {
+  finalTotalValue: number;
+  totalAmountInvested: number;
+  totalAmountInterest: number;
+  valuesPerMonth: {
+    month: number;
+    fees: number;
+    totalInvested: number;
+    totalInterest: number;
+    accumulated: number;
+  }[];
+};
+
+const CompoundInterestResult = ({
+  finalTotalValue,
+  totalAmountInterest,
+  totalAmountInvested,
+  valuesPerMonth,
+}: CompoundInterestResultProps) => {
+  if (!finalTotalValue || !totalAmountInvested || !totalAmountInterest) {
+    return null;
+  }
 
   const pieChartData = [
-    { valueInvested: "totalInvested", amout: 275, fill: "#F1B61D" },
-    { valueInvested: "totalInterest", amout: 200, fill: "#f59e0b" },
+    {
+      valueInvested: "totalInvested",
+      amout: totalAmountInvested,
+      fill: "#F1B61D",
+    },
+    {
+      valueInvested: "totalInterest",
+      amout: totalAmountInterest,
+      fill: "#f59e0b",
+    },
   ];
-
   const pieChartConfig = {
     amout: {
       label: "Total R$",
@@ -44,70 +80,13 @@ const CompoundInterestResult = () => {
     },
   } satisfies ChartConfig;
 
-  const chartData = [
-    { date: "01", totalInvested: 222, totalInterest: 150 },
-    { date: "02", totalInvested: 97, totalInterest: 180 },
-    { date: "03", totalInvested: 167, totalInterest: 120 },
-    { date: "04", totalInvested: 242, totalInterest: 260 },
-    { date: "05", totalInvested: 373, totalInterest: 290 },
-    { date: "06", totalInvested: 301, totalInterest: 340 },
-    { date: "07", totalInvested: 245, totalInterest: 180 },
-    { date: "08", totalInvested: 409, totalInterest: 320 },
-    { date: "09", totalInvested: 59, totalInterest: 110 },
-    { date: "10", totalInvested: 261, totalInterest: 190 },
-    { date: "11", totalInvested: 327, totalInterest: 350 },
-    { date: "12", totalInvested: 292, totalInterest: 210 },
-    { date: "13", totalInvested: 342, totalInterest: 380 },
-    { date: "14", totalInvested: 137, totalInterest: 220 },
-    { date: "15", totalInvested: 120, totalInterest: 170 },
-    { date: "16", totalInvested: 138, totalInterest: 190 },
-    { date: "17", totalInvested: 446, totalInterest: 360 },
-    { date: "18", totalInvested: 364, totalInterest: 410 },
-    { date: "19", totalInvested: 243, totalInterest: 180 },
-    { date: "20", totalInvested: 89, totalInterest: 150 },
-    { date: "21", totalInvested: 137, totalInterest: 200 },
-    { date: "22", totalInvested: 224, totalInterest: 170 },
-    { date: "23", totalInvested: 138, totalInterest: 230 },
-    { date: "24", totalInvested: 387, totalInterest: 290 },
-    { date: "25", totalInvested: 215, totalInterest: 250 },
-    { date: "26", totalInvested: 75, totalInterest: 130 },
-    { date: "27", totalInvested: 383, totalInterest: 420 },
-    { date: "28", totalInvested: 122, totalInterest: 180 },
-    { date: "29", totalInvested: 315, totalInterest: 240 },
-    { date: "30", totalInvested: 454, totalInterest: 380 },
-    { date: "31", totalInvested: 165, totalInterest: 220 },
-    { date: "32", totalInvested: 293, totalInterest: 310 },
-    { date: "33", totalInvested: 247, totalInterest: 190 },
-    { date: "34", totalInvested: 385, totalInterest: 420 },
-    { date: "35", totalInvested: 481, totalInterest: 390 },
-    { date: "36", totalInvested: 498, totalInterest: 520 },
-    { date: "37", totalInvested: 388, totalInterest: 300 },
-    { date: "38", totalInvested: 149, totalInterest: 210 },
-    { date: "39", totalInvested: 227, totalInterest: 180 },
-    { date: "30", totalInvested: 293, totalInterest: 330 },
-    { date: "31", totalInvested: 335, totalInterest: 270 },
-    { date: "32", totalInvested: 197, totalInterest: 240 },
-    { date: "33", totalInvested: 197, totalInterest: 160 },
-    { date: "34", totalInvested: 448, totalInterest: 490 },
-    { date: "35", totalInvested: 473, totalInterest: 380 },
-    { date: "36", totalInvested: 338, totalInterest: 400 },
-    { date: "37", totalInvested: 499, totalInterest: 420 },
-    { date: "38", totalInvested: 315, totalInterest: 350 },
-    { date: "39", totalInvested: 235, totalInterest: 180 },
-    { date: "40", totalInvested: 177, totalInterest: 230 },
-    { date: "41", totalInvested: 82, totalInterest: 140 },
-    { date: "42", totalInvested: 81, totalInterest: 120 },
-    { date: "43", totalInvested: 252, totalInterest: 290 },
-    { date: "44", totalInvested: 294, totalInterest: 220 },
-    { date: "45", totalInvested: 201, totalInterest: 250 },
-    { date: "46", totalInvested: 213, totalInterest: 170 },
-    { date: "47", totalInvested: 420, totalInterest: 460 },
-    { date: "48", totalInvested: 233, totalInterest: 190 },
-    { date: "49", totalInvested: 78, totalInterest: 130 },
-    { date: "50", totalInvested: 340, totalInterest: 280 },
-    { date: "51", totalInvested: 178, totalInterest: 230 },
-  ];
-  const chartConfig = {
+  const barChartData = valuesPerMonth.map((item) => ({
+    date: String(item.month + 1).padStart(2, "0"),
+    totalInvested: item.totalInvested,
+    totalInterest: item.totalInterest,
+  }));
+
+  const barChartConfig = {
     totalValue: {
       label: "Total R$",
     },
@@ -123,7 +102,7 @@ const CompoundInterestResult = () => {
 
   return (
     <BgCard>
-      <BorderCard className="flex gap-4 justify-between">
+      <BorderCard className="flex gap-4 justify-between max-lg:flex-col max-lg:items-center">
         <div>
           <div className="flex items-center gap-3">
             <span className="bg-primary p-2 rounded-lg">
@@ -131,10 +110,19 @@ const CompoundInterestResult = () => {
             </span>
             <h2 className="text-lg font-medium">Valor Total Final</h2>
           </div>
-          <h3 className="text-2xl font-bold ml-[48px] mt-2">R$ 709.277,44</h3>
+          <h3 className="text-2xl font-bold ml-[48px] mt-2">
+            {numberToCurrency(finalTotalValue)}
+          </h3>
         </div>
 
-        <Separator orientation="vertical" className="h-[76px]" />
+        <Separator
+          orientation="vertical"
+          className="h-[76px] max-lg:hidden dark:bg-foreground/10"
+        />
+        <Separator
+          orientation="horizontal"
+          className="hidden max-lg:block dark:bg-foreground/10"
+        />
 
         <div>
           <div className="flex items-center gap-3">
@@ -143,10 +131,19 @@ const CompoundInterestResult = () => {
             </span>
             <h2 className="text-lg font-medium">Valor Total Investido</h2>
           </div>
-          <h3 className="text-2xl font-bold ml-[48px] mt-2">R$ 297.800,00</h3>
+          <h3 className="text-2xl font-bold ml-[48px] mt-2">
+            {numberToCurrency(totalAmountInvested)}
+          </h3>
         </div>
 
-        <Separator orientation="vertical" className="h-[76px]" />
+        <Separator
+          orientation="vertical"
+          className="h-[76px] max-lg:hidden dark:bg-foreground/10"
+        />
+        <Separator
+          orientation="horizontal"
+          className="hidden max-lg:block dark:bg-foreground/10"
+        />
 
         <div>
           <div className="flex items-center gap-3">
@@ -155,11 +152,13 @@ const CompoundInterestResult = () => {
             </span>
             <h2 className="text-lg font-medium">Valor Total Em Juros</h2>
           </div>
-          <h3 className="text-2xl font-bold ml-[48px] mt-2">R$ 411.477,44</h3>
+          <h3 className="text-2xl font-bold ml-[48px] mt-2">
+            {numberToCurrency(totalAmountInterest)}
+          </h3>
         </div>
       </BorderCard>
 
-      <section className="mt-5 grid grid-cols-[0.4fr_1fr] gap-5">
+      <section className="mt-5 grid grid-cols-[0.4fr_1fr] gap-5 max-lg:grid-cols-1">
         <BorderCard className="p-0">
           <ChartContainer
             config={pieChartConfig}
@@ -186,12 +185,12 @@ const CompoundInterestResult = () => {
 
         <BorderCard className="p-0 pb-3">
           <ChartContainer
-            config={chartConfig}
+            config={barChartConfig}
             className="aspect-auto h-[300px] w-full"
           >
             <BarChart
               accessibilityLayer
-              data={chartData}
+              data={barChartData}
               margin={{
                 left: 12,
                 right: 12,
@@ -232,8 +231,28 @@ const CompoundInterestResult = () => {
         </BorderCard>
 
         <BorderCard className="col-span-full">
-          Tabela com as colunas: meses ou ano juros R$ total investido R$ total
-          juros R$ Acumulado R$
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Meses</TableHead>
+                <TableHead>Juros</TableHead>
+                <TableHead>Total Investido</TableHead>
+                <TableHead>Total Juros</TableHead>
+                <TableHead>Acumulado</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {valuesPerMonth.map((moth) => (
+                <TableRow key={`juros-${moth.month}`}>
+                  <TableCell>{moth.month}</TableCell>
+                  <TableCell>{numberToCurrency(moth.fees)}</TableCell>
+                  <TableCell>{numberToCurrency(moth.totalInvested)}</TableCell>
+                  <TableCell>{numberToCurrency(moth.totalInterest)}</TableCell>
+                  <TableCell>{numberToCurrency(moth.accumulated)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </BorderCard>
       </section>
     </BgCard>

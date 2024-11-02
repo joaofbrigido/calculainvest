@@ -17,9 +17,6 @@ export const CompoundInterestForm = () => {
     calculateCompoundInterestAction
   );
 
-  // se succes, rolar a tela ao resultado
-  console.log(success);
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -34,7 +31,11 @@ export const CompoundInterestForm = () => {
         error={errors?.initialAmount && errors?.initialAmount[0]}
       />
 
-      <div className="flex gap-1 items-end">
+      <div
+        className={`flex gap-1 items-end ${
+          errors?.interestRate ? "items-center" : ""
+        }`}
+      >
         <InputLabel
           label="Taxa de Juros"
           id="interestRate"
@@ -55,7 +56,11 @@ export const CompoundInterestForm = () => {
         </Select>
       </div>
 
-      <div className="flex gap-1 items-end">
+      <div
+        className={`flex gap-1 items-end ${
+          errors?.period ? "items-center" : ""
+        }`}
+      >
         <InputLabel
           label="Período"
           type="number"
@@ -86,7 +91,11 @@ export const CompoundInterestForm = () => {
         error={errors?.monthlyInvestment && errors?.monthlyInvestment[0]}
       />
 
-      <div className="flex gap-1 items-end">
+      <div
+        className={`flex gap-1 items-end ${
+          errors?.investmentInflation ? "items-center" : ""
+        }`}
+      >
         <InputLabel
           label="Inflação do Investimento"
           id="investmentInflation"
@@ -95,7 +104,7 @@ export const CompoundInterestForm = () => {
           type="number"
           error={errors?.investmentInflation && errors?.investmentInflation[0]}
         />
-        <Select defaultValue="annual" name="SelectInvestmentInflation">
+        <Select defaultValue="annual" name="selectInvestmentInflation">
           <SelectTrigger className="w-[100px]">
             <SelectValue placeholder="Selecione um Período" />
           </SelectTrigger>
@@ -111,6 +120,7 @@ export const CompoundInterestForm = () => {
           Limpar
         </MainButton>
         <MainButton isLoading={isPending}>Calcular</MainButton>
+        {success && <p className="text-green-500">{success}</p>}
       </div>
     </form>
   );

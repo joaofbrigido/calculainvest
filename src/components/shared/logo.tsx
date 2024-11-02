@@ -5,14 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 type LogoProps = {
-  isLoggeredIn: boolean;
+  isLoggedIn: boolean;
 };
 
-export const Logo = ({ isLoggeredIn }: LogoProps) => {
+export const Logo = ({ isLoggedIn }: LogoProps) => {
   const { theme } = useTheme();
 
   return (
-    <Link href={isLoggeredIn ? "/" : "/"}>
+    <Link href={isLoggedIn ? "/" : "/"}>
       <Image
         src={
           theme === "dark"

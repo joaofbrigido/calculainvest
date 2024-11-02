@@ -1,23 +1,38 @@
 import { NavCalculators } from "@/components/shared/nav-calculators";
 import { CompoundInterestForm } from "../../../components/juros-compostos/compound-interest-form";
-import CompoundInterestResult from "../../../components/juros-compostos/compound-interest-result";
 import BgCard from "@/components/shared/bg-card";
+import { cookies } from "next/headers";
+import CompoundInterestResult, {
+  CompoundInterestResultProps,
+} from "@/components/juros-compostos/compound-interest-result";
 
-export default function JurosCompostosPage() {
+export default async function JurosCompostosPage() {
+  const cookieStore = await cookies();
+  const responseCookieCompoundInterestResult = cookieStore.get(
+    "compoundInterestResult"
+  );
+  const compoundInterestResult: CompoundInterestResultProps =
+    responseCookieCompoundInterestResult
+      ? JSON.parse(responseCookieCompoundInterestResult.value)
+      : null;
+
   return (
-    <div className="mt-5 space-y-8">
+    <main className="mt-5">
       <NavCalculators active="juros-compostos" />
-      <BgCard className="mt-3">
-        <CompoundInterestForm />
-      </BgCard>
 
-      <BgCard className="h-36">Anúncio</BgCard>
+      <div className="space-y-8">
+        <BgCard className="mt-3">
+          <CompoundInterestForm />
+        </BgCard>
 
-      <CompoundInterestResult />
+        <BgCard className="h-36">Anúncio</BgCard>
 
-      <BgCard className="h-36">Anúncio</BgCard>
-      <BgCard className="h-36">Explicação da calc</BgCard>
-      <BgCard className="h-36">Anúncio</BgCard>
-    </div>
+        <CompoundInterestResult {...compoundInterestResult} />
+
+        <BgCard className="h-36">Anúncio</BgCard>
+        <BgCard className="h-36">Explicação da calc</BgCard>
+        <BgCard className="h-36">Anúncio</BgCard>
+      </div>
+    </main>
   );
 }

@@ -31,7 +31,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header isLoggeredIn={false} />
+          <Header isLoggedIn={false} />
           <div className="container">{children}</div>
         </ThemeProvider>
       </body>

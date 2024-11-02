@@ -1,6 +1,7 @@
 "use server";
 
 import { compoundInterestCalculation } from "@/utils/compound-interest-calculation";
+import { cookies } from "next/headers";
 import { z } from "zod";
 
 const compoundInterestSchema = z.object({
@@ -62,7 +63,7 @@ const compoundInterestSchema = z.object({
     )
     .optional(),
 
-  SelectInvestmentInflation: z.enum(["annual", "monthly"], {
+  selectInvestmentInflation: z.enum(["annual", "monthly"], {
     required_error: "Período da Inflação é obrigatório",
   }),
 });
@@ -70,17 +71,17 @@ const compoundInterestSchema = z.object({
 export type CompoundInterest = z.infer<typeof compoundInterestSchema>;
 
 export async function calculateCompoundInterestAction(data: FormData) {
-  const result = compoundInterestSchema.safeParse(Object.fromEntries(data));
+  const form = compoundInterestSchema.safeParse(Object.fromEntries(data));
 
-  if (!result.success) {
-    const errors = result.error.flatten().fieldErrors;
+  if (!form.success) {
+    const errors = form.error.flatten().fieldErrors;
     return { success: false, message: null, errors };
   }
 
   try {
-    // retornar o json do resultado
-    compoundInterestCalculation(result.data);
-    // armazenar no cookies
+    const result = compoundInterestCalculation(form.data);
+    const cookieStore = cookies();
+    cookieStore.set("compoundInterestResult", JSON.stringify(result));
   } catch (err) {
     if (err instanceof Error) {
       const { message } = await err;
