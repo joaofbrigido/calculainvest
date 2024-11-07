@@ -1,6 +1,9 @@
 "use client";
 
-import { calculateCompoundInterestAction } from "@/actions/juros-compostos";
+import {
+  calculateCompoundInterestAction,
+  clearFormAndResult,
+} from "@/actions/juros-compostos";
 import { InputLabel } from "@/components/shared/input-label";
 import MainButton from "@/components/shared/main-button";
 import {
@@ -17,6 +20,11 @@ export const CompoundInterestForm = () => {
     calculateCompoundInterestAction
   );
 
+  async function clearForm() {
+    await clearFormAndResult();
+    if (typeof window !== "undefined") window.location.reload();
+  }
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -24,10 +32,10 @@ export const CompoundInterestForm = () => {
     >
       <InputLabel
         label="Valor Inicial"
-        type="number"
         id="initialAmount"
         name="initialAmount"
         placeholder="R$ 0,00"
+        isCurrency
         error={errors?.initialAmount && errors?.initialAmount[0]}
       />
 
@@ -41,7 +49,7 @@ export const CompoundInterestForm = () => {
           id="interestRate"
           name="interestRate"
           placeholder="% 0,00"
-          type="number"
+          isNumber
           min={0}
           error={errors?.interestRate && errors?.interestRate[0]}
         />
@@ -83,10 +91,10 @@ export const CompoundInterestForm = () => {
 
       <InputLabel
         label="Investimento Mensal"
-        type="number"
         id="monthlyInvestment"
         name="monthlyInvestment"
         placeholder="R$ 0,00"
+        isCurrency
         containerClassName="col-span-2 max-lg:col-span-1"
         error={errors?.monthlyInvestment && errors?.monthlyInvestment[0]}
       />
@@ -101,7 +109,7 @@ export const CompoundInterestForm = () => {
           id="investmentInflation"
           name="investmentInflation"
           placeholder="% 0,00"
-          type="number"
+          isNumber
           error={errors?.investmentInflation && errors?.investmentInflation[0]}
         />
         <Select defaultValue="annual" name="selectInvestmentInflation">
@@ -116,12 +124,12 @@ export const CompoundInterestForm = () => {
       </div>
 
       <div className="space-x-2 col-span-full place-self-end">
-        <MainButton variant={"secondary"} type="reset" isLoading={isPending}>
+        <MainButton variant={"secondary"} type="button" onClick={clearForm}>
           Limpar
         </MainButton>
         <MainButton isLoading={isPending}>Calcular</MainButton>
-        {success && <p className="text-green-500">{success}</p>}
       </div>
+      {success && <p className="text-green-500">{success}</p>}
     </form>
   );
 };

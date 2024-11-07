@@ -6,16 +6,14 @@ import { z } from "zod";
 
 const compoundInterestSchema = z.object({
   initialAmount: z
-    .number({ required_error: "Valor Inicial é obrigatório" })
-    .nonnegative()
-    .or(
-      z
-        .string()
-        .transform((val) =>
-          parseFloat(val.replace("R$ ", "").replace(",", "."))
-        )
-    )
-    .refine((val) => !isNaN(val), { message: "Valor inválido" }),
+    .string()
+    .refine((value) => /^(R\$\s?)?\d{1,3}(\.\d{3})*(,\d{2})?$/.test(value), {
+      message: "Valor inválido, insira um valor monetário válido",
+    })
+    .transform((value) => {
+      const numericValue = value.replace(/[R$\s.]/g, "").replace(",", ".");
+      return parseFloat(numericValue);
+    }),
 
   interestRate: z
     .number({ required_error: "Taxa de Juros é obrigatória" })
@@ -43,15 +41,14 @@ const compoundInterestSchema = z.object({
   }),
 
   monthlyInvestment: z
-    .number()
-    .nonnegative()
-    .or(
-      z
-        .string()
-        .transform((val) =>
-          parseFloat(val.replace("R$ ", "").replace(",", "."))
-        )
-    )
+    .string()
+    .refine((value) => /^(R\$\s?)?\d{1,3}(\.\d{3})*(,\d{2})?$/.test(value), {
+      message: "Valor inválido, insira um valor monetário válido",
+    })
+    .transform((value) => {
+      const numericValue = value.replace(/[R$\s.]/g, "").replace(",", ".");
+      return parseFloat(numericValue);
+    })
     .optional(),
 
   investmentInflation: z
@@ -61,6 +58,7 @@ const compoundInterestSchema = z.object({
         .string()
         .transform((val) => parseFloat(val.replace("% ", "").replace(",", ".")))
     )
+    .refine((val) => !isNaN(val), { message: "Taxa inválida" })
     .optional(),
 
   selectInvestmentInflation: z.enum(["annual", "monthly"], {
@@ -100,4 +98,13 @@ export async function calculateCompoundInterestAction(data: FormData) {
     message: "Cálculo realizado com sucesso.",
     errors: null,
   };
+}
+
+export async function clearFormAndResult() {
+  const cookieStore = cookies();
+  const result = cookieStore.get("compoundInterestResult");
+
+  if (result) {
+    cookieStore.delete("compoundInterestResult");
+  }
 }

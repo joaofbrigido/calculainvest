@@ -50,7 +50,7 @@ const CompoundInterestResult = ({
   totalAmountInvested,
   valuesPerMonth,
 }: CompoundInterestResultProps) => {
-  if (!finalTotalValue || !totalAmountInvested || !totalAmountInterest) {
+  if (!valuesPerMonth) {
     return null;
   }
 
