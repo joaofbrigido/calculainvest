@@ -7,27 +7,34 @@ import { z } from "zod";
 const compoundInterestSchema = z.object({
   initialAmount: z
     .string()
-    .refine((value) => /^(R\$\s?)?\d{1,3}(\.\d{3})*(,\d{2})?$/.test(value), {
-      message: "Valor inválido, insira um valor monetário válido",
-    })
+    .refine(
+      (value) => !value || /^(R\$\s?)?\d{1,3}(\.\d{3})*(,\d{2})?$/.test(value),
+      {
+        message: "Valor inválido, insira um valor monetário válido",
+      }
+    )
     .transform((value) => {
+      if (!value) return 0;
       const numericValue = value.replace(/[R$\s.]/g, "").replace(",", ".");
       return parseFloat(numericValue);
     }),
 
   interestRate: z
-    .number({ required_error: "Taxa de Juros é obrigatória" })
-    .nonnegative()
+    .number()
     .or(
       z
         .string()
-        .transform((val) => parseFloat(val.replace("% ", "").replace(",", ".")))
+        .transform((val) =>
+          val ? parseFloat(val.replace("% ", "").replace(",", ".")) : 0
+        )
     )
-    .refine((val) => !isNaN(val), { message: "Taxa inválida" }),
+    .refine((val) => val >= 0, { message: "Taxa inválida" }),
 
-  selectInterestRate: z.enum(["annual", "monthly"], {
-    required_error: "Período da Taxa de Juros é obrigatório",
-  }),
+  selectInterestRate: z
+    .enum(["annual", "monthly"], {
+      required_error: "Período da Taxa de Juros é obrigatório",
+    })
+    .transform((val) => (val === undefined ? "annual" : val)), // Define um valor padrão
 
   period: z
     .number({ required_error: "Período é obrigatório" })
@@ -36,34 +43,42 @@ const compoundInterestSchema = z.object({
     .or(z.string().transform((val) => parseInt(val, 10)))
     .refine((val) => !isNaN(val), { message: "Período inválido" }),
 
-  selectPeriod: z.enum(["years", "months"], {
-    required_error: "Unidade do Período é obrigatória",
-  }),
+  selectPeriod: z
+    .enum(["years", "months"], {
+      required_error: "Unidade do Período é obrigatória",
+    })
+    .transform((val) => (val === undefined ? "years" : val)), // Define um valor padrão
 
   monthlyInvestment: z
     .string()
-    .refine((value) => /^(R\$\s?)?\d{1,3}(\.\d{3})*(,\d{2})?$/.test(value), {
-      message: "Valor inválido, insira um valor monetário válido",
-    })
+    .refine(
+      (value) => !value || /^(R\$\s?)?\d{1,3}(\.\d{3})*(,\d{2})?$/.test(value),
+      {
+        message: "Valor inválido, insira um valor monetário válido",
+      }
+    )
     .transform((value) => {
+      if (!value) return 0;
       const numericValue = value.replace(/[R$\s.]/g, "").replace(",", ".");
       return parseFloat(numericValue);
-    })
-    .optional(),
+    }),
 
   investmentInflation: z
     .number()
     .or(
       z
         .string()
-        .transform((val) => parseFloat(val.replace("% ", "").replace(",", ".")))
+        .transform((val) =>
+          val ? parseFloat(val.replace("% ", "").replace(",", ".")) : 0
+        )
     )
-    .refine((val) => !isNaN(val), { message: "Taxa inválida" })
-    .optional(),
+    .refine((val) => val >= 0, { message: "Taxa inválida" }),
 
-  selectInvestmentInflation: z.enum(["annual", "monthly"], {
-    required_error: "Período da Inflação é obrigatório",
-  }),
+  selectInvestmentInflation: z
+    .enum(["annual", "monthly"], {
+      required_error: "Período da Inflação é obrigatório",
+    })
+    .transform((val) => (val === undefined ? "annual" : val)), // Define um valor padrão
 });
 
 export type CompoundInterest = z.infer<typeof compoundInterestSchema>;
