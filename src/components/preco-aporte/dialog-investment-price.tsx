@@ -17,7 +17,7 @@ import { SelectTicker } from "../shared/select-ticker";
 import { useState } from "react";
 import { SwitchAutomaticPrice } from "../shared/switch-automatic-price";
 
-export const DialogPrecoAporte = () => {
+export const DialogInvestmentPrice = () => {
   const [ticker, setTicker] = useState("");
   const [automaticPrice, setAutomaticPrice] = useState(false);
 

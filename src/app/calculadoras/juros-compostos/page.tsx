@@ -7,7 +7,7 @@ import CompoundInterestResult, {
 } from "@/components/juros-compostos/compound-interest-result";
 
 export default async function JurosCompostosPage() {
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   const responseCookieCompoundInterestResult = cookieStore.get(
     "compoundInterestResult"
   );

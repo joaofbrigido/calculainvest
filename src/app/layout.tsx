@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
-import "./globals.css";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { Header } from "@/components/shared/header";
+import NextTopLoader from "nextjs-toploader";
+import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -31,6 +33,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster richColors />
+          <NextTopLoader
+            color="#FACC15"
+            height={3}
+            shadow="0 0 10px #FACC15,0 0 5px #FACC15"
+          />
           <Header isLoggedIn={false} />
           <div className="container">{children}</div>
         </ThemeProvider>
