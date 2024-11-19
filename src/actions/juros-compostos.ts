@@ -97,7 +97,7 @@ export async function calculateCompoundInterestAction(data: FormData) {
     cookieStore.set("compoundInterestResult", JSON.stringify(result));
   } catch (err) {
     if (err instanceof Error) {
-      const { message } = await err;
+      const { message } = err;
       return { success: false, message, errors: null };
     }
 

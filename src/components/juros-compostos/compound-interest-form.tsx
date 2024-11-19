@@ -16,6 +16,7 @@ import {
 import { useForm } from "@/hooks/use-form";
 
 export const CompoundInterestForm = () => {
+  //Lembrar de retirar o success no final do html e rolar a pag quando success
   const [{ errors, success }, handleSubmit, isPending] = useForm(
     calculateCompoundInterestAction
   );
@@ -40,9 +41,7 @@ export const CompoundInterestForm = () => {
       />
 
       <div
-        className={`flex gap-1 items-end ${
-          errors?.interestRate ? "items-center" : ""
-        }`}
+        className={`flex gap-1 ${errors?.interestRate ? "items-center" : ""}`}
       >
         <InputLabel
           label="Taxa de Juros"
@@ -54,7 +53,9 @@ export const CompoundInterestForm = () => {
           error={errors?.interestRate && errors?.interestRate[0]}
         />
         <Select defaultValue="annual" name="selectInterestRate">
-          <SelectTrigger className="w-[100px]">
+          <SelectTrigger
+            className={`w-[100px] self-end ${errors?.period && "self-center"}`}
+          >
             <SelectValue placeholder="Selecione um Período" />
           </SelectTrigger>
           <SelectContent>
