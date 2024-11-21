@@ -1,5 +1,7 @@
 "use server";
 
+import { calculateInvestmentPrice } from "@/utils/investment-price-calculations";
+import { cookies } from "next/headers";
 import { z } from "zod";
 
 const newInvestmentSchema = z
@@ -54,11 +56,37 @@ export async function newInvestmentAction(data: FormData, ticker: string) {
     };
   }
 
-  console.log(form.data, ticker);
-
   try {
-    // TODO: Implementar a lógica para calcular o preço do aporte
-    // salvar nos cookies
+    const calculateData = await calculateInvestmentPrice({
+      ...form.data,
+      ticker,
+    });
+
+    if (calculateData.error)
+      return {
+        success: false,
+        message: calculateData.message,
+        errors: null,
+      };
+
+    const cookieStore = cookies();
+    const investmentPriceCookie = cookieStore.get("investmentPrice");
+    let investmentPriceList = [];
+
+    if (investmentPriceCookie) {
+      investmentPriceList = JSON.parse(investmentPriceCookie.value);
+    }
+
+    const investmentPriceData = {
+      ticker: ticker,
+      tickerPrice: calculateData.tickerPrice,
+      quantity: calculateData.quantity,
+      total: calculateData.total,
+      logo: calculateData.logo,
+    };
+
+    investmentPriceList.push(investmentPriceData);
+    cookieStore.set("investmentPrice", JSON.stringify(investmentPriceList));
 
     return {
       success: true,

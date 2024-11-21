@@ -31,7 +31,15 @@ type InputErrorsProps = null | {
   tickerPrice?: string[] | undefined;
 };
 
-export const DialogFormInvestmentPrice = () => {
+type DialogFormInvestmentPriceProps = {
+  openDialog?: boolean;
+  setOpenDialog?: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const DialogFormInvestmentPrice = ({
+  openDialog,
+  setOpenDialog,
+}: DialogFormInvestmentPriceProps) => {
   const [ticker, setTicker] = useState("");
   const [automaticPrice, setAutomaticPrice] = useState(false);
   const [inputErrors, setInputErrors] = useState<InputErrorsProps>({});
@@ -88,7 +96,7 @@ export const DialogFormInvestmentPrice = () => {
   }, []);
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
         <Button className="max-sm:w-full">
           <Plus />
