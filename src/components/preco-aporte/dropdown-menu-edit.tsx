@@ -9,7 +9,13 @@ import {
 import { Button } from "../ui/button";
 import { MoreHorizontal, Pen, Trash } from "lucide-react";
 
-export const DropdownMenuEdit = () => {
+export const DropdownMenuEdit = ({
+  onEdit,
+  onDelete,
+}: {
+  onEdit: () => void;
+  onDelete: () => void;
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -20,14 +26,11 @@ export const DropdownMenuEdit = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
-        <DropdownMenuItem onClick={() => console.log("Editar")}>
+        <DropdownMenuItem onClick={onEdit}>
           <Pen size={12} className="mr-2" />
           Editar
         </DropdownMenuItem>
-        <DropdownMenuItem
-          className="text-red-500"
-          onClick={() => console.log("Excluir")}
-        >
+        <DropdownMenuItem className="text-red-500" onClick={onDelete}>
           <Trash size={12} className="mr-2" />
           Excluir
         </DropdownMenuItem>

@@ -23,10 +23,14 @@ import { DialogFormInvestmentPrice } from "./dialog-form-investment-price";
 import { useState } from "react";
 import Image from "next/image";
 import { numberToCurrency } from "@/utils/number-converter";
+import { DeleteConfirmDialog } from "../shared/delete-confirm-dialog";
+import { deleteInvestmentAction } from "@/actions/preco-aporte";
+import { toast } from "sonner";
 
 export type InvestmentPriceResultProps = {
   investmentPriceList: [
     {
+      id: string;
       ticker: string;
       tickerPrice: number;
       quantity: number;
@@ -39,40 +43,11 @@ export type InvestmentPriceResultProps = {
 export const InvestmentPriceResult = ({
   investmentPriceList,
 }: InvestmentPriceResultProps) => {
-  const chartData = [
-    { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-    { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-    { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-    { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-    { browser: "other", visitors: 90, fill: "var(--color-other)" },
-  ];
-  const chartConfig = {
-    visitors: {
-      label: "Visitors",
-    },
-    chrome: {
-      label: "Chrome",
-      color: "hsl(var(--chart-1))",
-    },
-    safari: {
-      label: "Safari",
-      color: "hsl(var(--chart-2))",
-    },
-    firefox: {
-      label: "Firefox",
-      color: "hsl(var(--chart-3))",
-    },
-    edge: {
-      label: "Edge",
-      color: "hsl(var(--chart-4))",
-    },
-    other: {
-      label: "Other",
-      color: "hsl(var(--chart-5))",
-    },
-  } satisfies ChartConfig;
-
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [editedId, setEditedId] = useState("");
+  const [deletedId, setDeletedId] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   function totalAmountInvested() {
     const total = investmentPriceList.reduce(
@@ -81,6 +56,88 @@ export const InvestmentPriceResult = ({
     );
     return total;
   }
+
+  function handleEditItem(id: string) {
+    setEditedId(id);
+    setOpenDialog(true);
+  }
+
+  function handleDeleteItem(id: string) {
+    setDeletedId(id);
+    setOpenDeleteDialog(true);
+  }
+
+  async function deleteInvestment() {
+    if (deletedId) {
+      setDeleteLoading(true);
+
+      const response = await deleteInvestmentAction(deletedId);
+
+      if (!response.success) {
+        toast.error(response.message);
+        setDeleteLoading(false);
+        return;
+      }
+
+      setDeleteLoading(false);
+      setOpenDeleteDialog(false);
+      toast.success("Aporte excluido com sucesso.");
+    }
+  }
+
+  function getChartData() {
+    const fillColors = [
+      "var(--color-chrome)",
+      "var(--color-safari)",
+      "var(--color-firefox)",
+      "var(--color-edge)",
+      "var(--color-other)",
+    ];
+
+    const totalSum = investmentPriceList.reduce(
+      (acc, item) => acc + item.total,
+      0
+    );
+
+    let colorIndex = 0;
+
+    return investmentPriceList.map((item) => {
+      const fill = fillColors[colorIndex];
+      colorIndex = (colorIndex + 1) % fillColors.length;
+
+      return {
+        ticker: item.ticker,
+        percentage: Number(((item.total / totalSum) * 100).toFixed(2)),
+        fill,
+      };
+    });
+  }
+
+  const chartConfig = {
+    percentage: {
+      label: "Porcentagem",
+    },
+    chrome: {
+      label: "Ativo 1",
+      color: "hsl(var(--chart-1))",
+    },
+    safari: {
+      label: "Ativo 2",
+      color: "hsl(var(--chart-2))",
+    },
+    firefox: {
+      label: "Ativo 3",
+      color: "hsl(var(--chart-3))",
+    },
+    edge: {
+      label: "Ativo 4",
+      color: "hsl(var(--chart-4))",
+    },
+    other: {
+      label: "Ativo 5",
+      color: "hsl(var(--chart-5))",
+    },
+  } satisfies ChartConfig;
 
   return (
     <>
@@ -92,10 +149,7 @@ export const InvestmentPriceResult = ({
               Nenhum aporte realizado, adicione pelo menos um aporte para
               controlar o preço do seu investimento
             </p>
-            <DialogFormInvestmentPrice
-              openDialog={openDialog}
-              setOpenDialog={setOpenDialog}
-            />
+            <DialogFormInvestmentPrice />
           </div>
         </BgCard>
       ) : (
@@ -113,8 +167,8 @@ export const InvestmentPriceResult = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {investmentPriceList.map((item, idx) => (
-                  <TableRow key={`aporte-${item.ticker}-${idx}`}>
+                {investmentPriceList.map((item) => (
+                  <TableRow key={`aporte-${item.id}`}>
                     <TableCell>
                       <Image
                         src={item.logo}
@@ -131,7 +185,10 @@ export const InvestmentPriceResult = ({
                       {numberToCurrency(item.total)}
                     </TableCell>
                     <TableCell className="text-right">
-                      <DropdownMenuEdit />
+                      <DropdownMenuEdit
+                        onEdit={() => handleEditItem(item.id)}
+                        onDelete={() => handleDeleteItem(item.id)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -162,15 +219,15 @@ export const InvestmentPriceResult = ({
             <BgCard className="px-2 py-2">
               <ChartContainer
                 config={chartConfig}
-                className="mx-auto aspect-square max-h-[320px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+                className="mx-auto aspect-square max-h-[400px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
               >
                 <PieChart>
                   <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                   <Pie
-                    data={chartData}
-                    dataKey="visitors"
+                    data={getChartData()}
+                    dataKey="percentage"
                     label
-                    nameKey="browser"
+                    nameKey="ticker"
                   />
                 </PieChart>
               </ChartContainer>
@@ -184,6 +241,20 @@ export const InvestmentPriceResult = ({
         <BgCard>Explicação da Calculadora</BgCard>
         <BgCard>Anúncio</BgCard>
       </section>
+
+      <DialogFormInvestmentPrice
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        id={editedId}
+        needDialogTrigger={false}
+      />
+
+      <DeleteConfirmDialog
+        openDeleteDialog={openDeleteDialog}
+        setOpenDeleteDialog={setOpenDeleteDialog}
+        deleteLoading={deleteLoading}
+        functionDelete={async () => await deleteInvestment()}
+      />
     </>
   );
 };
