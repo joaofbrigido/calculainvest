@@ -36,13 +36,3 @@ export async function calculateInvestmentPrice({
     logo: tickerData.stock?.logo,
   };
 }
-
-// function calculateInvestmentPriceManual(quantity: number, tickerPrice: number) {
-//   return tickerPrice * quantity;
-// }
-
-// function calculateInvestmentPriceAutomatic(ticker: string, quantity: number) {
-//   // consultar api, pegar valor atual do ticker e multiplicar pela quantidade
-//   console.log(ticker, quantity);
-//   return 0;
-// }

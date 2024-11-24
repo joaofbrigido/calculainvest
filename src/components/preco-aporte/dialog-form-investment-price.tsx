@@ -140,7 +140,7 @@ export const DialogFormInvestmentPrice = ({
   useEffect(() => {
     setInputValuesInEditing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [openDialog]);
 
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
