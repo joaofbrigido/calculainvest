@@ -114,12 +114,3 @@ export async function calculateCompoundInterestAction(data: FormData) {
     errors: null,
   };
 }
-
-export async function clearFormAndResult() {
-  const cookieStore = cookies();
-  const result = cookieStore.get("compoundInterestResult");
-
-  if (result) {
-    cookieStore.delete("compoundInterestResult");
-  }
-}

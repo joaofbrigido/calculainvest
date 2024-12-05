@@ -30,26 +30,18 @@ import {
   TableRow,
 } from "../ui/table";
 import { numberToCurrency } from "@/utils/number-converter";
+import { useCompoundInterestResult } from "@/context/compound-interest-result-context";
+import { CompoundInterestResult as CompoundInterestResultProps } from "@/utils/compound-interest-calculation";
 
-export type CompoundInterestResultProps = {
-  finalTotalValue: number;
-  totalAmountInvested: number;
-  totalAmountInterest: number;
-  valuesPerMonth: {
-    month: number;
-    fees: number;
-    totalInvested: number;
-    totalInterest: number;
-    accumulated: number;
-  }[];
-};
+const CompoundInterestResult = () => {
+  const { compoundInterestResult } = useCompoundInterestResult();
+  const {
+    finalTotalValue,
+    totalAmountInterest,
+    totalAmountInvested,
+    valuesPerMonth,
+  } = compoundInterestResult as CompoundInterestResultProps;
 
-const CompoundInterestResult = ({
-  finalTotalValue,
-  totalAmountInterest,
-  totalAmountInvested,
-  valuesPerMonth,
-}: CompoundInterestResultProps) => {
   if (!valuesPerMonth) {
     return null;
   }
